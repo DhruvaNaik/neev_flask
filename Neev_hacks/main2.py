@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 import random
+import re
 
 app = Flask(__name__, template_folder="./templates", static_folder="./static")
 app.secret_key = 'your_secret_key'  # Required to use sessions
@@ -66,11 +67,13 @@ def signup():
 def index():
     return render_template('login.html')
 
+
+
 # Route to handle login form submission and verify user credentials
 @app.route('/login', methods=['POST'])
 def login():
-    gmail_id = request.form.get('gmail_id')
-    password = request.form.get('pwd')
+    gmail_id = request.form.get('userName')
+    password = request.form.get('password')
     
     # Establish database connection
     connection = get_db_connection()
@@ -108,20 +111,6 @@ def dashboard():
 def logout():
     session.clear()  # Clear the session data
     return redirect(url_for('index'))
-
-def test_db_connection():
-    try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
-        cursor.execute("SELECT fname FROM user;")
-        db = cursor.fetchone()
-        print(f"Connected to database: {db[0]}")
-        cursor.close()
-        connection.close()
-    except Exception as e:
-        print(f"Database connection failed: {e}")
-
-# Call this function when starting the app
 
 
 
